@@ -14,8 +14,8 @@ fragment_receiver: {
 
    # Parameters defining and configuring the fragment generator to be used
    		    
-   generator: ToySimulator 
-   fragment_type: TOY2        # Make sure downstream modules know about this fragment_type!
+   generator: HTG710FixedDMA 
+   fragment_type: HTG710FixedDMA        # Make sure downstream modules know about this fragment_type!
    nADCcounts: 100
    distribution_type: 1
    throttle_usecs: 10000
@@ -67,7 +67,8 @@ physics:
   a1: [ toyDump ]
   p1: [ artdaqDemoBuildInfo ]
   e1: [ out1, rootout ]
-  end_paths: [ a1, e1 ]
+#  end_paths: [ a1, e1 ]
+  end_paths: [ e1 ]
 }
 
 outputs:
@@ -92,7 +93,8 @@ source:
 module_type: RawInput
 waiting_time: 900
 resume_after_timeout: true
-fragment_type_map: [[3, "V1720"], [4, "V1724"], [6, "TOY1"], [7, "TOY2"] ]
+#fragment_type_map: [[3, "V1720"], [4, "V1724"], [6, "TOY1"], [7, "TOY2"] ]
+fragment_type_map: [21, "HTG710FixedDMA"]
 }
 
 process_name: Driver

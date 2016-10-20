@@ -20,7 +20,7 @@ simple_plugin(V172xSimulator "generator"
   ${CETLIB}
   )
 
-simple_plugin(ToySimulator "generator"
+simple_plugin(HTG710FixedDMA "generator"
   artdaq-demo_Generators_ToyHardwareInterface
   artdaq-core-demo_Overlays
   artdaq_Application
@@ -58,3 +58,5 @@ simple_plugin(UDPReceiver "generator"
     )
 
 add_subdirectory(ToyHardwareInterface)
+add_subdirectory(HTG710FixedDMAHardwareInterface)
+add_subdirectory(flx)

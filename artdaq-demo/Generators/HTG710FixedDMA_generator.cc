@@ -15,6 +15,7 @@
 
 #include "artdaq-core-demo/Overlays/HTG710FixedDMAFragment.hh"
 #include "artdaq-core-demo/Overlays/FragmentType.hh"
+#include "HTG710FixedDMAHardwareInterface/HTG710FixedDMAHardwareInterface.hh"
 
 
 #include "cetlib/exception.h"
@@ -31,25 +32,29 @@
 demo::HTG710FixedDMA::HTG710FixedDMA(fhicl::ParameterSet const & ps)
   :
   CommandableFragmentGenerator(ps),
-  hardware_interface_( new ToyHardwareInterface(ps) ),
+  hardware_interface_( new HTG710FixedDMAHardwareInterface(ps) ),
   timestamp_(0),
   timestampScale_(ps.get<int>("timestamp_scale_factor", 1)),
   readout_buffer_(nullptr),
   fragment_type_(static_cast<decltype(fragment_type_)>( artdaq::Fragment::InvalidFragmentType ))
 {
+
+  std::cout << "HTG710FixedDMA_generator.cc::constructor. BoardType() is " << hardware_interface_->BoardType() << std::endl;
   hardware_interface_->AllocateReadoutBuffer(&readout_buffer_);   
 
   metadata_.board_serial_number = hardware_interface_->SerialNumber();
   metadata_.num_adc_bits = hardware_interface_->NumADCBits();
 
+  // 1000 is added in HTG710FixedDMAHardwareInterface::BoardType()
   switch (hardware_interface_->BoardType()) {
-  case 710:
+  case 1006: // as assigned by m.f.'ing artdaq-core-demo's FragmentType.cc
     fragment_type_ = toFragmentType("HTG710FixedDMA");
     break;
   case 1007:
-    fragment_type_ = toFragmentType("TOY2");
+    fragment_type_ = toFragmentType("TOY");
     break;
   default:
+    std::cout << "HTG710FixedDMA_generator.cc::constructor2. BoardType() is " << hardware_interface_->BoardType() << std::endl;
     throw cet::exception("HTG710FixedDMA") << "Unable to determine board type supplied by hardware";
   }
 }

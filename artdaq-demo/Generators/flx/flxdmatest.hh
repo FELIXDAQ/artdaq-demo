@@ -32,21 +32,25 @@ class flxdmatest
 {
 
 public:
-  flxdmatest();
-  ~flxdmatest();
+  flxdmatest() {};
+  ~flxdmatest() {};
   FlxCard flxCard;
+
+  // EC making get_data,vaddr public, the second of which is totally against the spirit of the original DMA'ing program.
+  int get_data(int, char**);
+  u_long vaddr;
 
 private:
 
   int i, loop, max_tlp, ret, device_number = 0, opt, handle, debuglevel;
-  u_long baraddr0, vaddr, paddr, board_id, bsize, opt_emu_ena_to_host, opt_emu_ena_to_frontend, opt_dnlnk_fo, opt_uplnk_fo;
+  u_long baraddr0, /*vaddr,*/ paddr, board_id, bsize, opt_emu_ena_to_host, opt_emu_ena_to_frontend, opt_dnlnk_fo, opt_uplnk_fo;
 
   flxcard_bar0_regs_t *bar0;
 
 
   void dump_buffer(u_long);
   void display_help();
-  int get_data(int, char**);
+
 };
 
 }

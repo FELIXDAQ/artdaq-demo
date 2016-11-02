@@ -1,8 +1,13 @@
 art_make(
+	flx
         LIB_LIBRARIES
         ${ART_UTILITIES}
         ${FHICLCPP}
         ${CETLIB}
 	artdaq-core_Data
 	artdaq-core-demo_Overlays
+	FlxCard
+	DFDebug
+	cmem_rcc
+	rcc_error
         )

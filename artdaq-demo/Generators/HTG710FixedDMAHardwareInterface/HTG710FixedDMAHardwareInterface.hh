@@ -58,7 +58,7 @@ private:
   std::size_t throttle_usecs_;
   DistributionType distribution_type_;
 
-  flxdmatest felix_;
+  flx::flxdmatest felix_;
 
 // Members needed to generate the simulated data
 

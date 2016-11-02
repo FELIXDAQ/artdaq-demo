@@ -9,6 +9,9 @@
 #include <unistd.h>
 #include <iostream>
 
+//#include <sstream>
+//#include <iterator>
+
 // JCF, Mar-17-2016
 
 // HTG710FixedDMAHardwareInterface is meant to mimic a vendor-provided hardware
@@ -34,6 +37,9 @@ HTG710FixedDMAHardwareInterface::HTG710FixedDMAHardwareInterface(fhicl::Paramete
   start_time_(std::numeric_limits<decltype(std::chrono::high_resolution_clock::now())>::max())
 {
 
+
+    std::cout << "HTG710FixedDMAHardwareInterface constructor.EC fragment_type_ is " <<  fragment_type_ << std::endl;
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-compare"
 
@@ -53,9 +59,13 @@ HTG710FixedDMAHardwareInterface::HTG710FixedDMAHardwareInterface(fhicl::Paramete
       change_after_N_seconds_ == std::numeric_limits<size_t>::max()) {
     throw cet::exception("HardwareInterface") << "If \"nADCcounts_after_N_seconds\""
 					      << " is set, then \"change_after_N_seconds\" should be set as well";
+
 #pragma GCC diagnostic pop
       
   }
+
+
+
 }
 
 // JCF, Mar-18-2017
@@ -85,9 +95,14 @@ void HTG710FixedDMAHardwareInterface::FillBuffer(char* buffer, size_t* bytes_rea
       std::chrono::duration_cast<std::chrono::seconds>(std::chrono::high_resolution_clock::now()
 						       - start_time_).count();
 
-    int argc, char** argv;
+    char** argv(0);
+    std::string argvs(""); // presuming I won't pass any arguments
+    std::stringstream sstream(argvs);
+    int len = std::distance(std::istream_iterator<std::string>(sstream), std::istream_iterator<std::string>());
+    int argc(len); 
+
     felix_.get_data(argc,argv);
-    buffer = *felix_.vaddr;
+    buffer = (char *)(felix_.vaddr);
 		    
 
 #pragma GCC diagnostic push
@@ -110,7 +125,7 @@ void HTG710FixedDMAHardwareInterface::FillBuffer(char* buffer, size_t* bytes_rea
 
     // Can't handle a fragment whose size isn't evenly divisible by
     // the demo::ToyFragment::Header::data_t type size in bytes
-	//std::cout << "Bytes to read: " << *bytes_read << ", sizeof(data_t): " << sizeof(demo::ToyFragment::Header::data_t) << std::endl;
+    std::cout << "Bytes to read: " << *bytes_read << ", sizeof(data_t): " << sizeof(demo::HTG710FixedDMAFragment::Header::data_t) << std::endl;
     assert( *bytes_read % sizeof(demo::HTG710FixedDMAFragment::Header::data_t) == 0 );
 
     demo::HTG710FixedDMAFragment::Header* header = reinterpret_cast<demo::HTG710FixedDMAFragment::Header*>(buffer);
@@ -194,14 +209,16 @@ int HTG710FixedDMAHardwareInterface::BoardType() const {
 
 int HTG710FixedDMAHardwareInterface::NumADCBits() const {
 
+  std::cout << "NumADCBits().EC fragment_type_ is " <<  fragment_type_ << std::endl;
   switch (fragment_type_) {
-  case demo::FragmentType::HTG710FixedDMA:
-    return 710; // EC: making up this number
   case demo::FragmentType::TOY1:
     return 12;
     break;
   case demo::FragmentType::TOY2:
     return 14;
+    break;
+  case demo::FragmentType::HTG710FixedDMA:
+    return 14; 
     break;
   default:
     throw cet::exception("HTG710FixedDMAHardwareInterface")
@@ -215,6 +232,6 @@ int HTG710FixedDMAHardwareInterface::NumADCBits() const {
 }
 
 int HTG710FixedDMAHardwareInterface::SerialNumber() const {
-  return 710; // EC: making up this number
+  return 71; // EC: making up this number
 }
 

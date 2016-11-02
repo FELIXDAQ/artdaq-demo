@@ -21,7 +21,7 @@ simple_plugin(V172xSimulator "generator"
   )
 
 simple_plugin(HTG710FixedDMA "generator"
-  artdaq-demo_Generators_ToyHardwareInterface
+  artdaq-demo_Generators_HTG710FixedDMAHardwareInterface
   artdaq-core-demo_Overlays
   artdaq_Application
   artdaq_DAQdata
@@ -32,6 +32,11 @@ simple_plugin(HTG710FixedDMA "generator"
   ${MF_MESSAGELOGGER}
   ${MF_UTILITIES}
   ${CETLIB}
+  FlxCard
+  DFDebug
+  regmap2
+  cmem_rcc
+  rcc_error
   )
 
 simple_plugin(AsciiSimulator "generator"

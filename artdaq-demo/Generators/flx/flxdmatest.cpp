@@ -2,7 +2,7 @@
 
 //Globals
 //FlxCard flxCard;
-
+#pragma GCC diagnostic ignored "-Wwrite-strings" // EC, 20-Oct to make newer gcc happy.
 
 /*****************/
 void flx::flxdmatest::display_help()
@@ -40,7 +40,7 @@ void flx::flxdmatest::dump_buffer(u_long virt_addr)
 //int main(int argc, char **argv)
 /*****************************/
 
-int flx::flxdmatest::getdata (int argc, char **argv)
+int flx::flxdmatest::get_data (int argc, char **argv)
 {
 
   // Replace the while and argc,argv with using psets from fcl.

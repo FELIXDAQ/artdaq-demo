@@ -23,6 +23,7 @@
 #include "artdaq/Application/CommandableFragmentGenerator.hh"
 #include "artdaq-core-demo/Overlays/HTG710FixedDMAFragment.hh"
 #include "artdaq-core-demo/Overlays/FragmentType.hh"
+#include "HTG710FixedDMAHardwareInterface/HTG710FixedDMAHardwareInterface.hh"
 
 #include "HTG710FixedDMA.hh"
 
@@ -54,8 +55,8 @@ namespace demo {
     void stopNoMutex() override {}
 
     std::unique_ptr<HTG710FixedDMAHardwareInterface> hardware_interface_;
-	artdaq::Fragment::timestamp_t timestamp_;
-	int timestampScale_;
+    artdaq::Fragment::timestamp_t timestamp_;
+    int timestampScale_;
 
     HTG710FixedDMAFragment::Metadata metadata_;
 

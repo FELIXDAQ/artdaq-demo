@@ -102,8 +102,9 @@ void HTG710FixedDMAHardwareInterface::FillBuffer(char* buffer, size_t* bytes_rea
     int argc(len); 
 
     felix_.get_data(argc,argv);
-    buffer = (char *)(felix_.vaddr);
-		    
+    // This memcpy is mandatory. We crash below at header->anything = blah  with instead the below line.
+    // buffer = (char *)(felix_.vaddr);
+    std::memcpy(buffer, (char*)(felix_.vaddr), *bytes_read);
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-compare"
@@ -131,10 +132,13 @@ void HTG710FixedDMAHardwareInterface::FillBuffer(char* buffer, size_t* bytes_rea
     demo::HTG710FixedDMAFragment::Header* header = reinterpret_cast<demo::HTG710FixedDMAFragment::Header*>(buffer);
 
     header->event_size = *bytes_read / sizeof(demo::HTG710FixedDMAFragment::Header::data_t) ;
-    header->trigger_number = 99;
+    header->trigger_number = 12;
 
     // Generate nADCcounts ADC values ranging from 0 to max based on
     // the desired distribution
+
+
+    /*
 
     std::function<data_t()> generator;
 
@@ -184,10 +188,16 @@ void HTG710FixedDMAHardwareInterface::FillBuffer(char* buffer, size_t* bytes_rea
 		      );
     }
 
+    */
+
+    // if (taking_data)
   } else {
     throw cet::exception("HTG710FixedDMAHardwareInterface") <<
       "Attempt to call FillBuffer when not sending data";
   }
+
+
+
 }
 
 void HTG710FixedDMAHardwareInterface::AllocateReadoutBuffer(char** buffer) {

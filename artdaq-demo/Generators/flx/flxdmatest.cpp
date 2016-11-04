@@ -145,7 +145,7 @@ int flx::flxdmatest::get_data (int argc, char **argv)
     //    printf("\nBuffer after DMA write:\n");
     // dump_buffer(vaddr);
 
-    for(i = 0; i<5 ; i++)
+    for(i = 0; i<1 ; i++) // 5->1, EC, 3-Nov-2016.
     {
       printf("\n--------------------\n  %d:\n", i);
       flxCard.dma_advance_read_ptr(DMA_ID, paddr, BUFSIZE, 512); //512

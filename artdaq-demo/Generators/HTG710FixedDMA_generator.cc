@@ -83,13 +83,6 @@ bool demo::HTG710FixedDMA::getNext_(artdaq::FragmentPtrs & frags) {
   std::size_t bytes_read = 0;
   hardware_interface_->FillBuffer(readout_buffer_ , &bytes_read);
 
-  // We'll use the static factory function 
-
-  // artdaq::Fragment::FragmentBytes(std::size_t payload_size_in_bytes, sequence_id_t sequence_id,
-  //  fragment_id_t fragment_id, type_t type, const T & metadata)
-
-  // which will then return a unique_ptr to an artdaq::Fragment
-  // object. 
 
   std::unique_ptr<artdaq::Fragment> fragptr(
    					    artdaq::Fragment::FragmentBytes(bytes_read,  

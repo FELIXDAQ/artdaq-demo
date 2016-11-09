@@ -101,6 +101,11 @@ void HTG710FixedDMAHardwareInterface::FillBuffer(char* buffer, size_t* bytes_rea
     int len = std::distance(std::istream_iterator<std::string>(sstream), std::istream_iterator<std::string>());
     int argc(len); 
 
+    // Note that this method is meant for a fake hardware interface in which one wants to place fake generated data 
+    // into the buffer, which ordinarily comes from the hardware and is thus to remain inviolate. In real life one
+    // wouldn't do that. Hence, to write into that hardware buffer we first must memcpy it here. This extra memcpy
+    // is time we don't want to spend ordinarily, among other principles being sacrificed here.
+
     felix_.get_data(argc,argv);
     // This memcpy is mandatory. We crash below at header->anything = blah  with instead the below line.
     // buffer = (char *)(felix_.vaddr);
@@ -129,6 +134,9 @@ void HTG710FixedDMAHardwareInterface::FillBuffer(char* buffer, size_t* bytes_rea
     std::cout << "Bytes to read: " << *bytes_read << ", sizeof(data_t): " << sizeof(demo::HTG710FixedDMAFragment::Header::data_t) << std::endl;
     assert( *bytes_read % sizeof(demo::HTG710FixedDMAFragment::Header::data_t) == 0 );
 
+
+    // Again, this is dumb for a real hardware buffer. We are stuffing a header with values, and blithely acting as if our buffer 
+    // has come with a header at the top of known size. We have succeeding in stomping on the data from the HTG710. Boo.
     demo::HTG710FixedDMAFragment::Header* header = reinterpret_cast<demo::HTG710FixedDMAFragment::Header*>(buffer);
 
     header->event_size = *bytes_read / sizeof(demo::HTG710FixedDMAFragment::Header::data_t) ;

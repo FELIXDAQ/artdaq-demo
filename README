@@ -1,0 +1,73 @@
+
+These are PNNL versions of the FNAL repositories, where an HTG710FixedDMA fragment is assembled from the FELIX DMA'd data.
+This is necessarily a sketch of instructions, and building/installing/running at your site will require some tweaking of 
+everything below. Feel free to email eric.church@pnnl.gov for help.
+
+The original code for artdaq-demo and artdaq-core-demo comes from https://cdcvs.fnal.gov/redmine/projects/artdaq-demo/wiki. Start
+by getting that code and building/installing:
+git clone http://cdcvs.fnal.gov/projects/artdaq-demo
+./artdaq-demo/tools/quick-start.sh 
+
+The quick-start (sic) script pulls a whole bunch of products on which these two packages depend, builds and installs everything.
+
+NOW we want to get the pnnl flavors of artdaq-demo and artdaq-core-demo. Do the following git-ology after the above has completed. 
+Hop to your $BASEDIR/artdaq-core directory and say 
+git remote add origin-pnnl https://github.com/FELIXDAQ/artdaq-core
+git pull origin-pnnl feature/pnnl
+Hop to your $BASEDIR/artdaq-core-demo directory and say 
+git remote add origin-pnnl https://github.com/FELIXDAQ/artdaq-core-demo
+git pull origin-pnnl feature/pnnl
+
+These commands will merge the stuff from the PNNL repo on its feature/pnnl branch into your source code. (After you make changes, you can then feel free to
+commit and do git push origin-pnnl feature/pnnl in the two separate repos.)
+
+But now you have to go rebuild everything with the new PNNL code. This is involved, cuz we no longer hide the mysteries in quick-start.sh.
+If you change the overlay classes in artdaq-core-demo you need to rebuild it, then rebuild artdaq-core against that. If you don't
+touch the overlay classes you only need to follow the artdaq-core build instructions below. All this buildtool, setup, ups stuff
+is the FNAL WAY.
+
+
+I cut and paste an email here from John Freeman, a big contributor to these codebases at FNAL, which explain how to build these two things in conjunction.
+The instructions are a little arcane. Namely artdaq-core-demo is built with buildtool with flags you might never guess at, then you have to source the top level
+setup script again in order to be sure to be setting up against that newly installed, built code when you build artdaq-demo.
+
+Note that the code wants to build against some FELIX libraries which the CMakeLists.txt files hardcode in various /home/echurch places. You'll need to change that.
+Go to our FELIXDAQ github site and clone/pull the felix-pnnl repo. Install it, build per its README, then this artdaq stuff will link against those libraries after
+you make the appropriate changes in your artdaq-core CMakeList.txt's files. 1 or 2 places.
+
+You will no longer need to deal with buildtool as soon as your only problems are compiling errors. Just go to the artdaq(-core)-demo build directory and say make install.
+
+Run from your artdaq-demo build directory by saying demo_driver -c driver.fcl.
+
+
+*********************************************************************************************************************
+(from John F.)
+
+Right after logging into your system (so you've got a clean environment), do the following:
+
+cd $BASEDIR
+source setupARTDAQDEMO
+
+This will put you in $BASEDIR/build_artdaq-demo. The environment's set up to build artdaq-demo, but we don't want that (yet). So do the following:
+
+cd ../build_artdaq-core-demo
+source ../artdaq-core-demo/ups/setup_for_development -p e10 s35
+
+...where here, I'm assuming that the build qualifiers under which artdaq-core-demo were built were e10 and s35; e10 refers to the gcc version used in the build (v4_9_3a) and s35 refers to the art version used (v2_01_02). You can find out for yourself what build qualifiers you need by executing the following:
+
+printenv ARTDAQ_CORE_DEMO_LIB
+
+which in my case yields 
+
+/home/jcfree/developarea_artdaq-demo_test_overlay_instructions/products/artdaq_core_demo/v1_05_02/slf6.x86_64.e10.s35.prof/lib
+
+Then, after making edits to the source files in $BASEDIR/artdaq-core-demo, from $BASEDIR/build_artdaq-core-demo, execute the following: 
+
+buildtool -c -i -I $BASEDIR/products
+
+And what this will do is build artdaq-core-demo with your edits, and, if it compiles correctly, install it in your products directory. To do the same for artdaq-demo, you can just go back to $BASEDIR and source setupARTDAQDEMO again, in which case, from $BASEDIR/build_artdaq-demo, after you make edits to artdaq-demo, you can run 
+
+buildtool -c -i -I $BASEDIR/products
+
+
+

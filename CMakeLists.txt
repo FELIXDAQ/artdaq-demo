@@ -66,6 +66,8 @@ find_ups_boost( v1_50_0 filesystem
                         unit_test_framework
  )
 
+
+
 # Needed if using old art with new cetbuildtools / CMake.
 check_ups_version(art "$ENV{ART_VERSION}" v1_11_00 PRODUCT_OLDER_VAR have_old_art)
 if (have_old_art)
@@ -87,6 +89,12 @@ include(ArtDictionary)
 include(ArtMake)
 include(BuildPlugins)
 include(CetTest)
+
+# flx
+INCLUDE_DIRECTORIES (/home/echurch/artdaq5/srcs/artdaq_demo/artdaq-demo/Generators)
+## below directories provide, in order: libFlxCard.so, libregmap2.so (mine, not dot-a version), libcmem_rcc.so, libio_rcc.so, respectively, ...., then the artdaq stuff.       
+LINK_DIRECTORIES(/home/echurch/felix/software.r3222/flxcard/src  /home/echurch/felix/software.r3222/felixcore/build/flxcard/regmap /home/echurch/felix/software.r3222/drivers_rcc/lib64 /home/echurch/artdaq5/srcs/artdaq_demo/artdaq-demo/Generators/flx  )
+
 
 # source
 add_subdirectory(artdaq-demo)

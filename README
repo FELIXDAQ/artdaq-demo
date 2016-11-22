@@ -26,7 +26,10 @@ If you change the overlay classes in artdaq-core-demo you need to rebuild it, th
 touch the overlay classes you only need to follow the artdaq-core build instructions below. All this buildtool, setup, ups stuff
 is the FNAL WAY.
 
-The feature/pnnl_artdaq-v1_13_03 version suddenly uses mrb to build. It knows how to build many repos at once. So, after you've pulled your latest artdaq-demo and artdaq-core-demo changes and made sure you're on the branch feature/pnnl_artdaq-v1_13_03, hop to the top level $BASEDIR and say source setupARTDAQDEMO, then cd to your $BASEDIR/build area. Now say mrb z (basically, a rm -rf *) to clean your area of cruft. Now you will say mrbsetenv; mrb i -j32.
+The feature/pnnl_artdaq-v1_13_03 version suddenly uses mrb to build. It knows how to build many repos at once. So, after you've pulled your latest artdaq-demo and artdaq-core-demo 
+changes and made sure you're on the branch feature/pnnl_artdaq-v1_13_03, hop to the top level $BASEDIR and say source setupARTDAQDEMO, then cd to your $BASEDIR/build area. Now say 
+mrb z (basically, a rm -rf *) to clean your area of cruft. Now you will say mrbsetenv; mrb i -j32.
 
-This should cmake the Makefiles in both artdaq-demo and artdaq-core-demo; make those, then move code to your install area. Then, IMPORTANTLY, to run off these new, installed .so's make sure you say mrbslp. That sets all environment variables to use your newly built code.
+This should cmake the Makefiles in both artdaq-demo and artdaq-core-demo; make those, then move code to your install area. Then, IMPORTANTLY, to run off these new, installed .so's 
+make sure you say mrbslp. That sets all environment variables to use your newly built code.
 

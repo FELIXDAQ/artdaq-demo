@@ -13,13 +13,15 @@ There's nothing quick about it. Go get a sandwich and a cup of coffee.
 
 NOW we want to get the pnnl flavors of artdaq-demo and artdaq-core-demo. Do the following git-ology after the above has completed. 
 Hop to your $BASEDIR/artdaq-demo directory and say 
+git checkout -b feature/pnnl_artdaq_v1-13_03
 git remote add origin-pnnl https://github.com/FELIXDAQ/artdaq-demo
 git fetch origin-pnnl
 git pull origin-pnnl feature/pnnl_artdaq_v1-13_03
 Hop to your $BASEDIR/artdaq-core-demo directory and say 
+git checkout -b feature/pnnl_artdaq_v1-13_03
 git remote add origin-pnnl https://github.com/FELIXDAQ/artdaq-core-demo
 git fetch origin-pnnl
-git pull origin-pnnl feature/pnnl/pnnl_artdaq_v1-13_03
+git pull origin-pnnl feature/pnnl_artdaq_v1-13_03
 
 These commands will merge the stuff from the PNNL repo on its feature/pnnl_artdaq-v1_13_03 branch into your source code. (After you make changes, you can then feel free to
 commit and do git push origin-pnnl feature/pnnl_artdaq-v1_13_03 in the two separate repos.)
@@ -29,8 +31,9 @@ If you change the overlay classes in artdaq-core-demo you need to rebuild it, th
 touch the overlay classes you only need to follow the artdaq-demo build instructions below. mrb takes care of all of this self-consistently. All this buildtool, mrb, ups stuff
 is the FNAL WAY.
 
-The feature/pnnl_artdaq-v1_13_03 version suddenly uses mrb to build. It knows how to build many repos at once. So, after you've pulled your latest artdaq-demo and artdaq-core-demo 
-changes and made sure you're on the branch feature/pnnl_artdaq-v1_13_03, hop to the top level $BASEDIR and say source setupARTDAQDEMO, then cd to your $BASEDIR/build area. Now say 
+The feature/pnnl_artdaq-v1_13_03 version suddenly uses mrb to build, rather than "setup" of previous versions. This is a good thing. mrb knows how to build many repos at once. 
+mrb == "multi repository build." So, after you've pulled your latest artdaq-demo and artdaq-core-demo changes and made sure you're on the branch feature/pnnl_artdaq-v1_13_03, 
+hop to the top level $BASEDIR and say source setupARTDAQDEMO, then cd to your $BASEDIR/build area. Now say 
 mrb z (basically, a rm -rf *) to clean your area of cruft. Now you will say mrbsetenv; mrb i -j8. 
 
 This should cmake the Makefiles in both artdaq-demo and artdaq-core-demo; make those, then move code to your install area. Then, IMPORTANTLY, to run off these new, installed .so's 

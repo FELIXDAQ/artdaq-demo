@@ -16,15 +16,15 @@ Hop to your $BASEDIR/artdaq-demo directory and say
 git checkout -b feature/pnnl_artdaq_v1-13_03
 git remote add origin-pnnl https://github.com/FELIXDAQ/artdaq-demo
 git fetch origin-pnnl
-git pull origin-pnnl feature/pnnl_artdaq_v1-13_03
+git pull origin-pnnl feature/pnnl_artdaq-v2_00_00
 Hop to your $BASEDIR/artdaq-core-demo directory and say 
-git checkout -b feature/pnnl_artdaq_v1-13_03
+git checkout -b feature/pnnl_artdaq-v2_00_00
 git remote add origin-pnnl https://github.com/FELIXDAQ/artdaq-core-demo
 git fetch origin-pnnl
 git pull origin-pnnl feature/pnnl_artdaq_v1-13_03
 
 These commands will merge the stuff from the PNNL repo on its feature/pnnl_artdaq-v1_13_03 branch into your source code. (After you make changes, you can then feel free to
-commit and do git push origin-pnnl feature/pnnl_artdaq-v1_13_03 in the two separate repos.)
+commit and do git push origin-pnnl feature/pnnl_artdaq-v2_00_00 in the two separate repos.)
 
 But now you have to go rebuild everything with the new PNNL code. This is involved, cuz we no longer hide the mysteries in quick-mrb-start.sh.
 If you change the overlay classes in artdaq-core-demo you need to rebuild it, then rebuild artdaq-demo against that. And artdaq-demo changes have to be built, of course. If you don't

@@ -59,11 +59,36 @@ find_ups_boost( v1_50_0 filesystem
                         unit_test_framework
  )
 
+
+# Needed if using old art with new cetbuildtools / CMake.
+check_ups_version(art "$ENV{ART_VERSION}" v1_11_00 PRODUCT_OLDER_VAR have_old_art)
+if (have_old_art)
+  cmake_policy(SET CMP0046 OLD)
+endif()
+unset(have_old_art)
+
+check_ups_version(art "$ENV{ART_VERSION}" v2_00_00 PRODUCT_OLDER_VAR no_canvas)
+if (no_canvas)
+  set(CANVAS "art")
+else (no_canvas)
+  find_ups_product( canvas v1_00_00 )
+  set(CANVAS "canvas")
+  add_definitions(-DCANVAS)
+endif()
+
+
 # macros for art_dictionary and simple_plugin
 include(ArtDictionary)
 include(ArtMake)
 include(BuildPlugins)
 include(CetTest)
+
+# flx
+INCLUDE_DIRECTORIES ( /home/echurch/felix/software.r3222/drivers_rcc /home/echurch/felix/software.r3222/drivers_rcc/flx  /home/echurch/felix/software.r3222/drivers_rcc/cmem_rcc /home/echurch/felix/software.r3222/drivers_rcc/rcc_error )
+## below directories provide, in order: libFlxCard.so, libregmap2.so (mine, not dot-a version), libcmem_rcc.so, libio_rcc.so, respectively, ...., then the artdaq stuff.       
+LINK_DIRECTORIES(/home/echurch/felix/software.r3222/flxcard/src  /home/echurch/felix/software.r3222/drivers_rcc/lib64  /home/echurch/felix/software.r3222/flxcard/src/regmap)
+# /home/echurch/felix/software.r3222/felixcore/build/flxcard/regmap
+
 
 # source
 add_subdirectory(artdaq-demo)

@@ -23,7 +23,7 @@ git remote add origin-pnnl https://github.com/FELIXDAQ/artdaq-core-demo
 git fetch origin-pnnl
 git pull origin-pnnl feature/pnnl_artdaq_v2_00_00
 
-These commands will merge the stuff from the PNNL repo on its feature/pnnl_artdaq-v1_13_03 branch into your source code. (After you make changes, you can then feel free to
+These commands will merge the stuff from the PNNL repo on its feature/pnnl_artdaq-v2_00_00 branch into your source code. (After you make changes, you can then feel free to
 commit and do git push origin-pnnl feature/pnnl_artdaq-v2_00_00 in the two separate repos.)
 
 But now you have to go rebuild everything with the new PNNL code. This is involved, cuz we no longer hide the mysteries in quick-mrb-start.sh.
@@ -31,7 +31,7 @@ If you change the overlay classes in artdaq-core-demo you need to rebuild it, th
 touch the overlay classes you only need to follow the artdaq-demo build instructions below. mrb takes care of all of this self-consistently.
 
 mrb knows how to build many repos at once. 
-mrb == "multi repository build." So, after you've pulled your latest artdaq-demo and artdaq-core-demo changes and made sure you're on the branch feature/pnnl_artdaq-v1_13_03, 
+mrb == "multi repository build." So, after you've pulled your latest artdaq-demo and artdaq-core-demo changes and made sure you're on the branch feature/pnnl_artdaq-v2_00_00,
 hop to the top level $BASEDIR and say source setupARTDAQDEMO, then cd to your $BASEDIR/build area. Now say 
 mrb z (basically, a rm -rf *) to clean your area of cruft. Now you will say mrbsetenv; mrb i -j8. 
 

@@ -44,6 +44,7 @@ function launch() {
     --toy1 `hostname`,${ARTDAQDEMO_BR_PORT[0]},0,"DAQToySimulator.fcl" \
     --toy1 `hostname`,${ARTDAQDEMO_BR_PORT[1]},1,"DCSToySimulator.fcl" \
     --toy2 `hostname`,${ARTDAQDEMO_BR_PORT[2]},2,"CRVToySimulator.fcl" \
+    --toy3 `hostname`,${ARTDAQDEMO_BR_PORT[3]},2,"HTG710FixedDMASimulator.fcl" \
     --eb `hostname`,${ARTDAQDEMO_EB_PORT[0]},$ebComp,1 \
     --eb `hostname`,${ARTDAQDEMO_EB_PORT[1]},$ebComp,1 \
     --ag `hostname`,${ARTDAQDEMO_AG_PORT[0]},1,$agComp \

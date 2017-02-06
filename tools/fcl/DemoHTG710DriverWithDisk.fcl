@@ -1,26 +1,20 @@
 # FHiCL document used to run the "driver" executable. To learn more
 #  about the FHiCL language, please look at
-#  cdcvs.fnal.gov/redmine/documents/327 , the "FHiCL Quick Start Guide"
+#  cdcvs.fnal.gov/redmine/documents/327 , the "FHiCL Quick Start
+#  Guide"
 
-events_to_generate: 10
+events_to_generate: 25
 run_number: 101
 transition_timeout: 30
-
-services: {
-    TimeTracker: {}
-}
 
 fragment_receiver: {
 
    # Parameters defining and configuring the fragment generator to be used
-   		    
-#   generator: HTG710FakeDMA
-#   fragment_type: HTG710FakeDMA        # Make sure downstream modules know about this fragment_type!
-   generator: ToySimulator
-   fragment_type: TOY2
-   nADCcounts: 100
-   distribution_type: 1
-   throttle_usecs: 1000000
+   generator: HTG710FixedDMA
+   fragment_type: HTG710FIXEDDMA        # Make sure downstream modules know about this fragment_type!
+   nADCcounts: 20000000
+   distribution_type: 3
+   throttle_usecs: 0
    random_seed: 6514
 
    # Parameters configuring the fragment generator's parent class
@@ -28,7 +22,7 @@ fragment_receiver: {
 
    fragment_id: 0
    board_id: 0
-}  		  
+}		  
 
 event_builder: {
 
@@ -53,7 +47,6 @@ physics:
       raw_data_label: daq
       frag_type: @local::fragment_receiver.fragment_type
       num_adcs_to_show: 10   # Obviously this should be no more than ADC counts per fragment
-      dump_to_screen: true
     }
   }
 
@@ -67,10 +60,13 @@ physics:
    }
   }
 
-  a1: [ toyDump ]
-  p1: [ artdaqDemoBuildInfo ]
-  e1: [ out1, rootout ]
-  end_paths: [ a1, e1 ]
+#  a1: [ toyDump ]
+#  p1: [ artdaqDemoBuildInfo ]
+#  e1: [ out1, rootout ]
+#  end_paths: [ a1, e2 ]
+
+   e2: [ rootout ]
+   end_paths: [e2]
 }
 
 outputs:
@@ -79,7 +75,8 @@ outputs:
  rootout:
   {
     module_type: RootOutput
-    fileName: "driver.root"
+    fileName: "/tmp/artdaqDemoTest.root"
+    #fileName: "driver.root"
     compressionLevel: 0
   }
 
@@ -92,14 +89,8 @@ outputs:
 
 source:
 {
-module_type: RawInput
-waiting_time: 900
-resume_after_timeout: true
-fragment_type_map: [ [2, "TOY1"], [3, "TOY2"], [4, "HTG710FIXEDDMA"] ]
-#fragment_type_map: [ [3, "TOY2"] ]
+  module_type: RawInput
+  fragment_type_map: [ [1, "TOY1"], [2, "TOY2"], [3, "HTG710FixedDMA"]]
 }
 
-process_name: Driver
-
-
-
+process_name: DemoDriver

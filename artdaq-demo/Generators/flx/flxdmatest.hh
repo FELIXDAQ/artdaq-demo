@@ -39,6 +39,7 @@ public:
   // EC making get_data,vaddr public, the second of which is totally against the spirit of the original DMA'ing program.
   int get_data(int, char**);
   u_long vaddr;
+  u_long locaddr;
 
 private:
 

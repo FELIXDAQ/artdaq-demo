@@ -47,11 +47,14 @@ demo::HTG710FixedDMA::HTG710FixedDMA(fhicl::ParameterSet const & ps)
 
   // 1000 is added in HTG710FixedDMAHardwareInterface::BoardType()
   switch (hardware_interface_->BoardType()) {
-  case 1006: // as assigned by m.f.'ing artdaq-core-demo's FragmentType.cc
-    fragment_type_ = toFragmentType("HTG710FixedDMA");
+  case 1002:
+    fragment_type_ = toFragmentType("TOY1");
     break;
-  case 1007:
-    fragment_type_ = toFragmentType("TOY");
+  case 1003:
+    fragment_type_ = toFragmentType("TOY2");
+    break;
+  case 1004:
+    fragment_type_ = toFragmentType("HTG710FixedDMA");
     break;
   default:
     std::cout << "HTG710FixedDMA_generator.cc::constructor2. BoardType() is " << hardware_interface_->BoardType() << std::endl;

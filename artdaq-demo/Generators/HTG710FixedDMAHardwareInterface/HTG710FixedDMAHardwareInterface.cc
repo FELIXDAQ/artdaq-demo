@@ -109,7 +109,10 @@ void HTG710FixedDMAHardwareInterface::FillBuffer(char* buffer, size_t* bytes_rea
     felix_.get_data(argc,argv);
     // This memcpy is mandatory. We crash below at header->anything = blah  with instead the below line.
     // buffer = (char *)(felix_.vaddr);
-    std::memcpy(buffer, (char*)(felix_.vaddr), *bytes_read);
+
+    //    *bytes_read = BUFSIZE; // sizeof();  // FIXME, EC, 5-Feb-2017
+
+    std::memcpy(buffer, (char*)felix_.vaddr, *bytes_read);
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-compare"
@@ -198,6 +201,9 @@ void HTG710FixedDMAHardwareInterface::FillBuffer(char* buffer, size_t* bytes_rea
 
     */
 
+    memcpy (reinterpret_cast<data_t*>( reinterpret_cast<demo::HTG710FixedDMAFragment::Header*>(buffer) + 1 ), buffer, *bytes_read);
+
+
     // if (taking_data)
   } else {
     throw cet::exception("HTG710FixedDMAHardwareInterface") <<
@@ -235,7 +241,7 @@ int HTG710FixedDMAHardwareInterface::NumADCBits() const {
   case demo::FragmentType::TOY2:
     return 14;
     break;
-  case demo::FragmentType::HTG710FixedDMA:
+  case demo::FragmentType::HTG710FIXEDDMA:
     return 14; 
     break;
   default:

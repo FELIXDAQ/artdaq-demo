@@ -107,7 +107,6 @@ int flx::flxdmatest::get_data (int argc, char **argv)
     if (!ret)
       ret = CMEM_SegmentVirtualAddress(handle, &vaddr);
 
-
     if (ret)
     {
       rcc_error_print(stdout, ret);

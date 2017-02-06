@@ -458,6 +458,29 @@ end
         @options.toys << toy2Config
       end
 
+      opts.on("--toy3 [host,port,board_id,config_file]", Array, 
+              "Add a HTG710FixedDMA fragment receiver that runs on the specified host, port, ",
+              "and board ID. Reads additional parameters from config_file in FHICL_FILE_PATH") do |toy3|
+        if toy3.length < 3
+          puts "You must specifiy a host, port, and board ID."
+          exit
+        end
+        toy3Config = OpenStruct.new
+        toy3Config.host = toy3[0]
+        toy3Config.port = Integer(toy3[1])
+        toy3Config.board_id = Integer(toy3[2])
+        toy3Config.kind = "HTG710FIXEDDMA"
+        toy3Config.fragType = "HTG710FIXEDDMA"
+        if toy3.length > 3
+           toy3Config.configFile = toy3[3]
+        end
+        toy3Config.index = (@options.toys + @options.asciis + @options.udps + @options.pbrs).length
+        toy3Config.board_reader_index = addToBoardReaderList(toy3Config.host, toy3Config.port,
+                                                              toy3Config.kind, toy3Config.index, toy3Config.configFile)
+
+        @options.toys << toy3Config
+      end
+
       opts.on("--udp [host,port,board_id,config_file]", Array, 
               "Add a UDP fragment receiver that runs on the specified host, port, ",
               "and board ID. Reads additional parameters from config_file in FHICL_FILE_PATH") do |udp|
@@ -666,7 +689,7 @@ end
         when "pbr"
           puts "    BoardReader, port %d, rank %d, board_id %d, generator %s" %
             [ item.port, item.index, item.board_id, item.fragType ]
-        when "TOY1", "TOY2", "ASCII"
+        when "TOY1", "TOY2", "ASCII", "HTG710FIXEDDMA"
           puts "    FragmentGenerator, Simulated %s, port %d, rank %d, board_id %d, config_file %s" % 
             [item.kind.upcase,
              item.port,
@@ -707,6 +730,7 @@ class SystemControl
     agIndex = 0
     totaltoy1s = 0
     totaltoy2s = 0
+    totaltoy3s = 0
     totalasciis = @options.asciis.length
     totalpbrs = @options.pbrs.length
     totaludps = @options.udps.length
@@ -717,6 +741,8 @@ class SystemControl
         totaltoy1s += 1
       when "TOY2"
         totaltoy2s += 1
+      when "HTG710FIXEDDMA"
+        totaltoy3s += 1
       end
     end
     totalBoards = @options.toys.length + @options.asciis.length + @options.udps.length + @options.pbrs.length
@@ -907,6 +933,7 @@ class SystemControl
     agIndex = 0
     totaltoy1s = 0
     totaltoy2s = 0
+    totaltoy3s = 0
     totalasciis = @options.asciis.length
     totalpbrs = @options.pbrs.length
     totaludps = @options.udps.length
@@ -916,6 +943,8 @@ class SystemControl
         totaltoy1s += 1
       when "TOY2"
         totaltoy2s += 1
+      when "HTG710FIXEDDMA"
+        totaltoy3s += 1
       end
     end
     totalBoards = @options.toys.length + @options.asciis.length + @options.udps.length + @options.pbrs.length
@@ -1083,6 +1112,9 @@ class SystemControl
             [currentTime, proc.host, proc.port, result]
         when "ASCII"
           puts "%s: ASCII FragmentReceiver on %s:%d result: %s" %
+            [currentTime, proc.host, proc.port, result]
+        when "HTG710FIXEDDMA"
+          puts "%s: HTG710FIXEDDMA FragmentReceiver on %s:%d result: %s" %
             [currentTime, proc.host, proc.port, result]
         when "UDP"
           puts "%s: UDP FragmentReceiver on %s:%d result: %s" %

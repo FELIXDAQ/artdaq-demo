@@ -1,4 +1,5 @@
 #include "flxdmatest.hh"
+#include <cstring>
 
 //Globals
 //FlxCard flxCard;
@@ -25,7 +26,6 @@ void flx::flxdmatest::dump_buffer(u_long virt_addr)
   u_char *buf = (u_char *)virt_addr;
   int i;
 
-
   for(i = 0; i < BUFSIZE; i++)
   {
     if(i % 32 == 0)
@@ -33,6 +33,8 @@ void flx::flxdmatest::dump_buffer(u_long virt_addr)
     printf("%02x ", *buf++);
   }
   printf("\n");
+
+
 }
 
 
@@ -40,7 +42,7 @@ void flx::flxdmatest::dump_buffer(u_long virt_addr)
 //int main(int argc, char **argv)
 /*****************************/
 
-int flx::flxdmatest::get_data (int argc, char **argv)
+int flx::flxdmatest::get_data (int argc, char **argv, u_char* dest)
 {
 
   // Replace the while and argc,argv with using psets from fcl.
@@ -157,7 +159,12 @@ int flx::flxdmatest::get_data (int argc, char **argv)
       printf("Even Addr. PC   DMA0: 0x%lx\n", bar0->DMA_DESC_STATUS[0].even_addr_pc);
 
       dump_buffer(vaddr);
-      sleep(1);
+
+      free(dest);
+      dest = (u_char *) malloc(BUFSIZE);
+      std::memcpy(dest, (u_char *) vaddr, BUFSIZE);
+
+      sleep(0);
     }
 
     // reset to initial state

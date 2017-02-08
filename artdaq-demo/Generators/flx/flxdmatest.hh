@@ -37,7 +37,8 @@ public:
   FlxCard flxCard;
 
   // EC making get_data,vaddr public, the second of which is totally against the spirit of the original DMA'ing program.
-  int get_data(int, char**);
+  int get_data(int, char**, u_char*);
+  u_char *dest;
   u_long vaddr;
   u_long locaddr;
 

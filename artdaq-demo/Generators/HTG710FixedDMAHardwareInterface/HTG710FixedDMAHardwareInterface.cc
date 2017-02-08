@@ -106,23 +106,27 @@ void HTG710FixedDMAHardwareInterface::FillBuffer(char* buffer, size_t* bytes_rea
     // wouldn't do that. Hence, to write into that hardware buffer we first must memcpy it here. This extra memcpy
     // is time we don't want to spend ordinarily, among other principles being sacrificed here.
 
-    felix_.get_data(argc,argv);
-    // This memcpy is mandatory. We crash below at header->anything = blah  with instead the below line.
+
+    felix_.get_data(argc,argv, (u_char *)buffer);
+    // Is this memcpy mandatory? It's a wasteful extra one, if not.
     // buffer = (char *)(felix_.vaddr);
 
-    //    *bytes_read = BUFSIZE; // sizeof();  // FIXME, EC, 5-Feb-2017
+    *bytes_read = BUFSIZE; // sizeof();  // FIXME, EC, 5-Feb-2017
 
-    std::memcpy(buffer, (char*)felix_.vaddr, *bytes_read);
+
+
+    printf("BUFSIZE is %d",BUFSIZE);
+    //    std::memcpy((u_char *) buffer, (u_char*)felix_.vaddr, BUFSIZE);
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-compare"
     if (elapsed_secs_since_datataking_start < change_after_N_seconds_) {
 #pragma GCC diagnostic pop
 
-      *bytes_read = sizeof(demo::HTG710FixedDMAFragment::Header) + nADCcounts_ * sizeof(data_t);
+      //      *bytes_read = sizeof(demo::HTG710FixedDMAFragment::Header) + nADCcounts_ * sizeof(data_t);
     } else {
       if (nADCcounts_after_N_seconds_ >= 0) {
-	*bytes_read = sizeof(demo::HTG710FixedDMAFragment::Header) + nADCcounts_after_N_seconds_ * sizeof(data_t);
+	//*bytes_read = sizeof(demo::HTG710FixedDMAFragment::Header) + nADCcounts_after_N_seconds_ * sizeof(data_t);
       } else {
 	// Pretend the hardware hangs
 	while (true) {
@@ -145,65 +149,10 @@ void HTG710FixedDMAHardwareInterface::FillBuffer(char* buffer, size_t* bytes_rea
     header->event_size = *bytes_read / sizeof(demo::HTG710FixedDMAFragment::Header::data_t) ;
     header->trigger_number = 12;
 
-    // Generate nADCcounts ADC values ranging from 0 to max based on
-    // the desired distribution
 
+    //    memcpy (reinterpret_cast<data_t*>( reinterpret_cast<demo::HTG710FixedDMAFragment::Header*>(buffer) + 1 ), (u_char *)felix_.vaddr, *bytes_read);
 
-    /*
-
-    std::function<data_t()> generator;
-
-    switch (distribution_type_) {
-    case DistributionType::uniform:
-      generator = [&]() {
-	return static_cast<data_t>
-	((*uniform_distn_)( engine_ ));
-      };
-      break;
-
-    case DistributionType::gaussian:
-      generator = [&]() {
-
-	data_t gen(0);
-	do {
-	  gen = static_cast<data_t>( std::round( (*gaussian_distn_)( engine_ ) ) );
-	} 
-	while(gen > maxADCvalue_);                                                                    
-	return gen;
-      };
-      break;
-
-    case DistributionType::monotonic:
-      {
-	data_t increasing_integer = 0;
-	generator = [&]() {
-	  increasing_integer++;
-	  return increasing_integer > maxADCvalue_ ? 999 : increasing_integer;
-	};
-      }
-      break;
-
-    case DistributionType::uninitialized:
-      break;
-
-    default:
-      throw cet::exception("HardwareInterface") <<
-	"Unknown distribution type specified";
-    }
-
-    if (distribution_type_ != DistributionType::uninitialized) {
-      // EC: This is the money call that fills buffer 1 byte past header for nADCcounts.
-      std::generate_n(reinterpret_cast<data_t*>( reinterpret_cast<demo::HTG710FixedDMAFragment::Header*>(buffer) + 1 ), 
-		      nADCcounts_,
-		      generator
-		      );
-    }
-
-    */
-
-    memcpy (reinterpret_cast<data_t*>( reinterpret_cast<demo::HTG710FixedDMAFragment::Header*>(buffer) + 1 ), buffer, *bytes_read);
-
-
+    //    free(buffer);
     // if (taking_data)
   } else {
     throw cet::exception("HTG710FixedDMAHardwareInterface") <<
@@ -216,7 +165,9 @@ void HTG710FixedDMAHardwareInterface::FillBuffer(char* buffer, size_t* bytes_rea
 
 void HTG710FixedDMAHardwareInterface::AllocateReadoutBuffer(char** buffer) {
   
-  *buffer = reinterpret_cast<char*>( new uint8_t[ sizeof(demo::HTG710FixedDMAFragment::Header) + maxADCcounts_*sizeof(data_t) ] );
+  //*buffer = reinterpret_cast<char*>( new uint8_t[ sizeof(demo::HTG710FixedDMAFragment::Header) + maxADCcounts_*sizeof(data_t) ] );
+
+  *buffer = (char *)malloc(BUFSIZE);
 }
 
 void HTG710FixedDMAHardwareInterface::FreeReadoutBuffer(char* buffer) {
